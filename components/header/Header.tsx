@@ -10,9 +10,34 @@ import {
 import { Navlist } from "@/lib/constant/Navlist";
 import Link from "next/link";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Framer Motion Variants
+  const navContainer = {
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.3,
+        staggerChildren: 0.1,
+      },
+    },
+    hidden: {
+      opacity: 0,
+      y: -20,
+      transition: {
+        duration: 0.3,
+      },
+    },
+  };
+
+  const navItem = {
+    visible: { opacity: 1, x: 0 },
+    hidden: { opacity: 0, x: -20 },
+  };
 
   return (
     <header className="bg-black shadow-md">
@@ -61,15 +86,14 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Desktop and Mobile Navigation */}
+        {/* Desktop Navigation */}
         <NavigationMenu className="relative">
-          {/* Desktop Menu */}
-          <NavigationMenuList className="hidden md:flex space-x-6 ml-auto">
+          <NavigationMenuList className="hidden md:flex space-x-2 ml-auto">
             {Navlist?.map((item, index) => (
               <NavigationMenuItem key={index}>
                 <Link href={item.link} legacyBehavior passHref>
                   <NavigationMenuLink
-                    className={`${navigationMenuTriggerStyle()} text-white hover:text-gray-300 active:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors text-[16px]`}
+                    className={`${navigationMenuTriggerStyle()} text-white hover:text-gray-300 active:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors text-[17px]`}
                     tabIndex={0}
                   >
                     {item.title}
@@ -82,24 +106,35 @@ export default function Header() {
       </div>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="absolute top-20 left-0 w-full bg-black text-white shadow-md md:hidden">
-          <ul className="flex flex-col space-y-2 p-4">
-            {Navlist?.map((item, index) => (
-              <li key={index}>
-                <Link
-                  href={item.link}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className="absolute top-20 left-0 w-full h-full bg-black text-white shadow-md md:hidden"
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={navContainer}
+          >
+            <ul className="flex flex-col space-y-10 p-4 text-center text-2xl">
+              {Navlist?.map((item, index) => (
+                <motion.li
+                  key={index}
                   className="block px-4 py-2 text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 rounded transition-colors"
-                  tabIndex={0}
-                  aria-label={item.title}
+                  variants={navItem}
                 >
-                  {item.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                  <Link
+                    href={item.link}
+                    tabIndex={0}
+                    aria-label={item.title}
+                  >
+                    {item.title}
+                  </Link>
+                </motion.li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

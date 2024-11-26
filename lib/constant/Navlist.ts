@@ -4,8 +4,16 @@ export const Navlist = [
         link: "/",
     },
     {
-        title: "About",
-        link: "/about",
+        title: "Login",
+        link: "/login",
+    },
+    {
+        title: "Register",
+        link: "/register",
+    },
+    {
+        title: "Overview",
+        link: "/overview",
     },
     {
         title: "Contact",
