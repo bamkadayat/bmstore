@@ -109,7 +109,7 @@ export default function Header() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="absolute top-20 left-0 w-full h-full bg-black text-white shadow-md md:hidden"
+            className="absolute z-50 top-20 left-0 w-full h-full bg-black text-white shadow-md md:hidden"
             initial="hidden"
             animate="visible"
             exit="hidden"
