@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Bm Store",
-  description: "Online store for all your needs",
+  title: "Bm Arts",
+  description: "Online store for Arts and paintings",
 };
 
 export default function RootLayout({
