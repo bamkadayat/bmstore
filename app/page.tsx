@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
-import Footer from "@/components/footer/Footer";
+
 import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
-import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import ListLatestPaintings from "@/components/products/listLatestProducts";
 
 export default function Home() {
   const heroVariants = {
@@ -20,11 +20,6 @@ export default function Home() {
       scale: 1,
       transition: { duration: 0.8, delay: 0.1 },
     },
-  };
-
-  const [rating, setRating] = useState(4);
-  const handleRating = (value: number) => {
-    setRating(value); 
   };
 
   return (
@@ -84,141 +79,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="md:container md:mx-auto py-4 px-4 w-full my-10">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8">
-            Latest paintings
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Painting 1 */}
-            <div>
-              <div className="relative w-full h-0 pb-[75%]">
-                {" "}
-                {/* Aspect Ratio 4:3 */}
-                <Image
-                  src="/assets/card-two.jpg"
-                  alt="Hero Art"
-                  fill
-                  priority
-                  style={{ borderTopLeftRadius: "5px", borderTopRightRadius:"5px" }}
-                />
-              </div>
-              <div className="descriptions bg-gray-100 p-4">
-                <h3 className="font-semibold">One-of-a-Kind Art</h3>
-                <div>NOK 500</div>
-                <div className="rating flex items-center space-x-1">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, index) => (
-                      <span
-                        key={index}
-                        onClick={() => handleRating(index + 1)}
-                        className="cursor-pointer"
-                      >
-                        {index < rating ? (
-                          <AiFillStar className="text-orange-500" />
-                        ) : (
-                          <AiOutlineStar className="text-gray-400" />
-                        )}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-            {/* Painting 2 */}
-            <div>
-              <div className="relative w-full h-0 pb-[75%]">
-                <Image
-                  src="/assets/card-three.jpg"
-                  alt="Hero Art"
-                  fill
-                  priority
-                  style={{ borderTopLeftRadius: "5px", borderTopRightRadius:"5px" }}
-                />
-              </div>
-              <div className="descriptions bg-gray-100 p-4 rounded-b">
-                <h3 className="font-semibold">Curated Gift Guide</h3>
-                <div>NOK 500</div>
-                <div className="rating flex items-center space-x-1">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, index) => (
-                      <span
-                        key={index}
-                        onClick={() => handleRating(index + 1)}
-                        className="cursor-pointer"
-                      >
-                        {index < rating ? (
-                          <AiFillStar className="text-orange-500" />
-                        ) : (
-                          <AiOutlineStar className="text-gray-400" />
-                        )}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-            {/* Painting 3 */}
-            <div>
-              <div className="relative w-full h-0 pb-[75%]">
-                <Image
-                  src="/assets/hero-main.jpg"
-                  alt="Hero Art"
-                  fill
-                  priority
-                  style={{ borderTopLeftRadius: "5px", borderTopRightRadius:"5px" }}
-                />
-              </div>
-              <div className="descriptions bg-gray-100 p-4 rounded-md">
-                <h3 className="font-semibold">Truly Special Art</h3>
-                <div>NOK 500</div>
-                <div className="rating flex items-center space-x-1">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, index) => (
-                      <span
-                        key={index}
-                        onClick={() => handleRating(index + 1)}
-                        className="cursor-pointer"
-                      >
-                        {index < rating ? (
-                          <AiFillStar className="text-orange-500" />
-                        ) : (
-                          <AiOutlineStar className="text-gray-400" />
-                        )}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-            {/* Painting 4 */}
-            <div>
-              <div className="relative w-full h-0 pb-[75%]">
-                <Image src="/assets/hero.jpg" alt="Hero Art" fill priority style={{ borderTopLeftRadius: "5px", borderTopRightRadius:"5px" }} />
-              </div>
-              <div className="descriptions bg-gray-100 p-4">
-                <h3 className="font-semibold">Truly Special Art</h3>
-                <div>NOK 500</div>
-                <div className="rating flex items-center space-x-1">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, index) => (
-                      <span
-                        key={index}
-                        onClick={() => handleRating(index + 1)}
-                        className="cursor-pointer"
-                      >
-                        {index < rating ? (
-                          <AiFillStar className="text-orange-500" />
-                        ) : (
-                          <AiOutlineStar className="text-gray-400" />
-                        )}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <ListLatestPaintings />
       </main>
       <Footer />
     </div>
