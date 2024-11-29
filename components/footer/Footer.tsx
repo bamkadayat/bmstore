@@ -1,3 +1,4 @@
+"use client";
 export default function Footer() {
   return (
     <footer className="bg-black row-start-3 flex gap-6 text-white w-full">
@@ -9,7 +10,7 @@ export default function Footer() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          BM store © 2024 -{new Date().getFullYear()}
+          BM store © 2024
         </a>
       </div>
       <div>
