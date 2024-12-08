@@ -1,5 +1,9 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "@/store/authSlice";
+import { useRouter } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -12,8 +16,58 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
+interface RootState {
+  auth: {
+    user: { id: string; email: string; role: string } | null;
+    token: string | null;
+  };
+}
+
 export default function Header() {
+  const [isHydrated, setIsHydrated] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/users/logout", { method: "POST", credentials: "include" });
+      dispatch(logout());
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  // Dynamic filtering of navigation items
+  const getFilteredNavList = () => {
+    if (!user) {
+      return Navlist.filter((item) => ["Login", "Register", "Home", "Products", "Contact"].includes(item.title));
+    }
+
+    if (user.role === "ADMIN") {
+      return Navlist.filter((item) => !["Login", "Register"].includes(item.title)).concat({
+        title: "Logout",
+        href: "#",
+      });
+    }
+
+    if (user.role === "USER") {
+      return Navlist.filter((item) => !["Login", "Register"].includes(item.title)).concat({
+        title: "Logout",
+        href: "#",
+      });
+    }
+
+    return [];
+  };
+
+  const filteredNavList = isHydrated ? getFilteredNavList() : [];
 
   // Framer Motion Variants
   const navContainer = {
@@ -61,9 +115,7 @@ export default function Header() {
             className="text-white focus:outline-none focus:ring-2 focus:ring-gray-400 rounded"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-expanded={isMenuOpen}
-            aria-label={
-              isMenuOpen ? "Close navigation menu" : "Open navigation menu"
-            }
+            aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           >
             <svg
               className="w-8 h-8"
@@ -76,29 +128,34 @@ export default function Header() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d={
-                  isMenuOpen
-                    ? "M6 18L18 6M6 6l12 12"
-                    : "M4 6h16M4 12h16M4 18h16"
-                }
+                d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
               />
             </svg>
           </button>
         </div>
 
         {/* Desktop Navigation */}
-        <NavigationMenu className="relative">
-          <NavigationMenuList className="hidden md:flex space-x-2 ml-auto">
-            {Navlist?.map((item, index) => (
+        <NavigationMenu className="relative hidden md:flex">
+          <NavigationMenuList className="space-x-2 ml-auto">
+            {filteredNavList.map((item, index) => (
               <NavigationMenuItem key={index}>
-                <Link href={item.link} legacyBehavior passHref>
-                  <NavigationMenuLink
+                {item.title === "Logout" ? (
+                  <button
+                    onClick={handleLogout}
                     className={`${navigationMenuTriggerStyle()} text-white hover:text-gray-300 active:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors text-[17px]`}
-                    tabIndex={0}
                   >
-                    {item.title}
-                  </NavigationMenuLink>
-                </Link>
+                    Logout
+                  </button>
+                ) : (
+                  <Link href={item.href} legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={`${navigationMenuTriggerStyle()} text-white hover:text-gray-300 active:text-white focus:text-white focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors text-[17px]`}
+                      tabIndex={0}
+                    >
+                      {item.title}
+                    </NavigationMenuLink>
+                  </Link>
+                )}
               </NavigationMenuItem>
             ))}
           </NavigationMenuList>
@@ -116,19 +173,21 @@ export default function Header() {
             variants={navContainer}
           >
             <ul className="flex flex-col space-y-10 p-4 text-center text-2xl">
-              {Navlist?.map((item, index) => (
+              {filteredNavList.map((item, index) => (
                 <motion.li
                   key={index}
                   className="block px-4 py-2 text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 rounded transition-colors"
                   variants={navItem}
                 >
-                  <Link
-                    href={item.link}
-                    tabIndex={0}
-                    aria-label={item.title}
-                  >
-                    {item.title}
-                  </Link>
+                  {item.title === "Logout" ? (
+                    <button onClick={handleLogout} className="w-full text-left">
+                      Logout
+                    </button>
+                  ) : (
+                    <Link href={item.href} aria-label={item.title}>
+                      {item.title}
+                    </Link>
+                  )}
                 </motion.li>
               ))}
             </ul>
