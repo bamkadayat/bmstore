@@ -1,22 +1,18 @@
 export const Navlist = [
   {
-    title: "Home",
-    link: "/",
-  },
-  {
     title: "Login",
-    link: "/login",
+    href: "/login",
   },
   {
     title: "Register",
-    link: "/register",
+    href: "/register",
   },
   {
-    title: "Shop",
-    link: "/shop",
+    title: "Products",
+    href: "/products",
   },
   {
     title: "Contact",
-    link: "/contact",
+    href: "/contact",
   },
 ];
